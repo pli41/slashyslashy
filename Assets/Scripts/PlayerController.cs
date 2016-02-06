@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         if (state == PlayerState.Run)
         {
-            rigid.velocity = RecoverSpeed();
+            
         }
         else if(state == PlayerState.Attack)
         {
