@@ -15,6 +15,14 @@ public class PlayerController : MonoBehaviour {
 
     public float currentAccTime;
     public bool recovering;
+    public Collider groundChecker;
+
+
+    public bool grounded;
+    public bool inAir;
+    public float inAirGravityScale;
+    public float onGroundGravityScale;
+    public Vector2 jumpForce;
 
     void Awake()
     {
@@ -25,7 +33,8 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         currentAccTime = 0f;
-
+        grounded = false;
+        inAir = false;
 	}
 	
 
@@ -34,7 +43,7 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         if (state == PlayerState.Run)
         {
-            
+            rigid.velocity = RecoverSpeed();
         }
         else if(state == PlayerState.Attack)
         {
@@ -42,11 +51,42 @@ public class PlayerController : MonoBehaviour {
         }
         else if (state == PlayerState.Jump)
         {
-
+            rigid.gravityScale = inAirGravityScale;
         }
         else if (state == PlayerState.Def)
         {
 
+        }
+
+        HandleJump();
+    }
+
+    void HandleJump()
+    {
+        if (grounded)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                if (!inAir)
+                {
+                    Debug.Log("Jump");
+                    rigid.AddForce(jumpForce);
+                    inAir = true;
+                    grounded = false;
+                    state = PlayerState.Jump;
+                    rigid.gravityScale = inAirGravityScale;
+                }
+            }
+        }
+
+        if (inAir)
+        {
+            if (grounded)
+            {
+                inAir = false;
+                state = PlayerState.Run;
+                rigid.gravityScale = onGroundGravityScale;
+            }
         }
     }
 
