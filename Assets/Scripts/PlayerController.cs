@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour {
     public enum PlayerState{ Run, Attack, Jump, Def};
     public PlayerState state;
 
+    public float attackMoveSpeed;
+    public GameObject attackObject;
+    public float attackTime;
+
     public float MaxHoriSpeed;
     public float accelerationTime;
 
@@ -57,8 +61,25 @@ public class PlayerController : MonoBehaviour {
         {
 
         }
-
+        HandleAttack();
         HandleJump();
+    }
+
+    void HandleAttack()
+    {
+        if (Input.GetButtonDown("Attack"))
+        {
+            //CancelInvoke();
+            rigid.velocity = new Vector2(attackMoveSpeed, 0);
+            Instantiate(attackObject, transform.position, transform.rotation);
+            state = PlayerState.Attack;
+            Invoke("ReturnToRun", attackTime);
+        }
+    }
+
+    void ReturnToRun()
+    {
+        state = PlayerState.Run;
     }
 
     void HandleJump()
