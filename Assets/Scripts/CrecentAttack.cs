@@ -17,11 +17,11 @@ public class CrecentAttack : Projectile {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("222");
+        //Debug.Log("222");
         if (col.GetComponent<Destroyable>())
         {
             col.GetComponent<Destroyable>().StartDestroy();
-            Debug.Log("Destroy box");
+            //Debug.Log("Destroy box");
         }
 
     }

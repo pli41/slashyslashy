@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour {
     public Animator animator;
     public Rigidbody2D rigid;
 
-    public enum PlayerState{ Run, Attack, Jump, Def};
+    public enum PlayerState{ Run, Attack, Jump, Def, Stun};
     public PlayerState state;
 
     public float attackMoveSpeed;
@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour {
     public float MaxHoriSpeed;
     public float accelerationTime;
 
+    public float stunRecoverTime;
+    public Collider2D collider;
 
     public float currentAccTime;
     public bool recovering;
@@ -32,6 +34,7 @@ public class PlayerController : MonoBehaviour {
     {
         animator = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
+        collider = GetComponent<Collider2D>();
     }
 
 	// Use this for initialization
@@ -61,8 +64,17 @@ public class PlayerController : MonoBehaviour {
         {
 
         }
+        else if (state == PlayerState.Stun)
+        {
+            rigid.velocity = new Vector2(0, 0);
+        }
         HandleAttack();
         HandleJump();
+    }
+
+    void HandleStun()
+    {
+
     }
 
     void HandleAttack()
@@ -77,9 +89,19 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    void StartReturningToRun(float time)
+    {
+        Invoke("ReturnToTun", time);
+    }
+
     void ReturnToRun()
     {
         state = PlayerState.Run;
+        if (!collider.enabled)
+        {
+            collider.enabled = true;
+        }
+        animator.SetTrigger("ReturnToRun");
     }
 
     void HandleJump()
@@ -129,6 +151,5 @@ public class PlayerController : MonoBehaviour {
             currentAccTime += Time.deltaTime;
         }
     }
-
 
 }
