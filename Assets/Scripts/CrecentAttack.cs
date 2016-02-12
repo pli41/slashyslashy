@@ -6,8 +6,8 @@ public class CrecentAttack : Projectile {
 
 	// Use this for initialization
 	void Start () {
-        rigid.velocity = new Vector2(horiSpeed, 0f) ;
-        Invoke("DestroySelf", 1f);
+        rigid.velocity = new Vector2(horiSpeed, 0f);
+        Invoke("DestroySelf", persistTime);
 	}
 	
 	// Update is called once per frame

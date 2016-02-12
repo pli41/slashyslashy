@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour {
     public float onGroundGravityScale;
     public Vector2 jumpForce;
 
+    public float currentDefPower;
+    public bool isDead;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -68,8 +71,30 @@ public class PlayerController : MonoBehaviour {
         {
             rigid.velocity = new Vector2(0, 0);
         }
+        HandleDeath();
         HandleAttack();
         HandleJump();
+        
+        
+    }
+
+    public void HandleDamage(int amount)
+    {
+        Debug.Log("get " + amount + "damage");
+        if (currentDefPower-amount < 0f)
+        {
+            isDead = true;
+        }
+    }
+
+    void HandleDeath()
+    {
+        if (isDead)
+        {
+            animator.SetTrigger("Die");
+            Invoke("DisablePlayer", 1f);
+
+        }
     }
 
     void HandleStun()
@@ -150,6 +175,11 @@ public class PlayerController : MonoBehaviour {
         {
             currentAccTime += Time.deltaTime;
         }
+    }
+
+    void DisablePlayer()
+    {
+        Destroy(gameObject);
     }
 
 }
