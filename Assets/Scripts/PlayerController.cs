@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour {
 
     public float attackMoveSpeed;
     public GameObject attackObject;
+	public GameObject shield;
     public float attackTime;
 
     public float MaxHoriSpeed;
@@ -74,9 +75,15 @@ public class PlayerController : MonoBehaviour {
         HandleDeath();
         HandleAttack();
         HandleJump();
-        
+		HandleDef ();
         
     }
+
+	public void HandleDef(){
+		if(Input.GetButtonDown("Def")){
+			shield.GetComponent<Shield>().active = !shield.GetComponent<Shield>().active  ;
+		}
+	}
 
     public void HandleDamage(int amount)
     {

@@ -21,19 +21,20 @@ public class FrontChecker : MonoBehaviour {
 
         if (col.tag == "Obstacle")
         {
-            Debug.Log("Colliding with " + col.gameObject.name);
+            //Debug.Log("Colliding with " + col.gameObject.name);
             playerCtrl.state = PlayerController.PlayerState.Stun;
             playerCtrl.collider.enabled = false;
             playerCtrl.animator.SetTrigger("Stun");
             playerCtrl.Invoke("ReturnToRun", playerCtrl.stunRecoverTime);
         }
         else if (col.tag == "EnemyAttack") {
-            Debug.Log("666");
-            EnemyProjectile ep = col.GetComponent<EnemyProjectile>();
+            //Debug.Log("666");
+			EnemyAttack ep = col.GetComponent<EnemyAttack>();
             if (ep)
             {
                 if (ep.active)
                 {
+					Debug.Log ("Damage received");
                     playerCtrl.HandleDamage(ep.damage);
                 }
                 

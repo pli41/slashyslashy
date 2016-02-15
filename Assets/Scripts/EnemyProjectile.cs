@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyProjectile : MonoBehaviour {
+public class EnemyProjectile : EnemyAttack {
 
     public Rigidbody2D rigid;
 
@@ -21,7 +21,7 @@ public class EnemyProjectile : MonoBehaviour {
 	    
 	}
 
-    public void DestroySelf()
+	public virtual void DestroySelf()
     {
         Destroy(gameObject);
     }

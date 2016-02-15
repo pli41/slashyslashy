@@ -21,12 +21,11 @@ public class GhostBall : EnemyProjectile {
     void OnTriggerEnter2D(Collider2D col)
     {
         Debug.Log("collide");
-        AnimateAndDestroy();
+		DestroySelf ();
     }
 
-    void AnimateAndDestroy()
-    {
-        active = false;
-        animator.SetTrigger("Destroy");
-    }
+	public override void DestroySelf(){
+		active = false;
+		animator.SetTrigger("Destroy");
+	}
 }

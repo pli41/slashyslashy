@@ -26,7 +26,7 @@ public class Ghost : MonoBehaviour {
 
     void CheckDistance()
     {
-        Debug.Log(Vector2.Distance(transform.position, playerCtrl.transform.position));
+        //Debug.Log(Vector2.Distance(transform.position, playerCtrl.transform.position));
         if (Vector2.Distance(transform.position, playerCtrl.transform.position) < alertDistance)
         {
             alerted = true;
