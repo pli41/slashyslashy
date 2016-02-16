@@ -5,8 +5,6 @@ public class EnemyProjectile : EnemyAttack {
 
     public Rigidbody2D rigid;
 
-    public bool active;
-    public int damage;
     public float horiSpeed;
     public float gravityScale;
     public float persistTime;
@@ -21,7 +19,7 @@ public class EnemyProjectile : EnemyAttack {
 	    
 	}
 
-	public virtual void DestroySelf()
+	public override void DestroySelf()
     {
         Destroy(gameObject);
     }

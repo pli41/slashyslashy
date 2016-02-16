@@ -20,12 +20,23 @@ public class GhostBall : EnemyProjectile {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("collide");
-		DestroySelf ();
+        if (col.tag != "Enemy")
+        {
+            Debug.Log("collide");
+            DestroySelf();
+        }
+
+        
     }
 
 	public override void DestroySelf(){
 		active = false;
 		animator.SetTrigger("Destroy");
+        Invoke("DestroyObject", 1f);
 	}
+
+    public void DestroyObject()
+    {
+        base.DestroySelf();
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class PlayerController : MonoBehaviour {
     public GameObject attackObject;
 	public GameObject shield;
     public float attackTime;
+    public float attackStaminaCost;
+    public float defStaminaSpeed;
 
     public float MaxHoriSpeed;
     public float accelerationTime;
@@ -22,7 +25,12 @@ public class PlayerController : MonoBehaviour {
 
     public float currentAccTime;
     public bool recovering;
-    public Collider groundChecker;
+
+    //0-100
+    public float stamina;
+    public Slider staminaSlider;
+    public float staminaRecoverySpeed;
+   
 
 
     public bool grounded;
@@ -33,6 +41,8 @@ public class PlayerController : MonoBehaviour {
 
     public float currentDefPower;
     public bool isDead;
+
+    public Vector2 currentSpeed;
 
     void Awake()
     {
@@ -49,16 +59,16 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 
-
-	// Update is called once per frame
-	void Update () {
+    void FixedUpdate()
+    {
         if (state == PlayerState.Run)
         {
-            rigid.velocity = RecoverSpeed();
+            rigid.velocity = new Vector2(MaxHoriSpeed, rigid.velocity.y);
+            //rigid.velocity = RecoverSpeed();
         }
-        else if(state == PlayerState.Attack)
+        else if (state == PlayerState.Attack)
         {
-
+            rigid.velocity = new Vector2(attackMoveSpeed, 0);
         }
         else if (state == PlayerState.Jump)
         {
@@ -66,23 +76,68 @@ public class PlayerController : MonoBehaviour {
         }
         else if (state == PlayerState.Def)
         {
-
+            rigid.velocity = new Vector2(MaxHoriSpeed/2f, rigid.velocity.y);
         }
         else if (state == PlayerState.Stun)
         {
             rigid.velocity = new Vector2(0, 0);
         }
+    }
+
+	// Update is called once per frame
+	void Update () {
+        currentSpeed = rigid.velocity;
+
+        
         HandleDeath();
         HandleAttack();
         HandleJump();
 		HandleDef ();
-        
+        HandleStamina();
+    }
+
+    public void HandleStamina()
+    {
+        staminaSlider.value = stamina;
+        if (stamina+ staminaRecoverySpeed * Time.deltaTime > 100)
+        {
+            stamina = 100;
+        }
+        else
+        {
+            stamina += staminaRecoverySpeed * Time.deltaTime;
+        }
+    }
+
+    public bool CheckStamina(float amount)
+    {
+        if (amount <= stamina)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 	public void HandleDef(){
-		if(Input.GetButtonDown("Def")){
-			shield.GetComponent<Shield>().active = !shield.GetComponent<Shield>().active  ;
-		}
+        if (CheckStamina(defStaminaSpeed*Time.deltaTime))
+        {
+            if (Input.GetButton("Def"))
+            {
+
+                state = PlayerState.Def;
+                shield.GetComponent<Shield>().active = true;
+                stamina -= defStaminaSpeed * Time.deltaTime;
+            }
+            else
+            {
+                state = PlayerState.Run;
+                shield.GetComponent<Shield>().active = false;
+            }
+        }
+		
 	}
 
     public void HandleDamage(int amount)
@@ -111,14 +166,21 @@ public class PlayerController : MonoBehaviour {
 
     void HandleAttack()
     {
-        if (Input.GetButtonDown("Attack"))
+        if (CheckStamina(attackStaminaCost))
         {
-            //CancelInvoke();
-            rigid.velocity = new Vector2(attackMoveSpeed, 0);
-            Instantiate(attackObject, transform.position, transform.rotation);
-            state = PlayerState.Attack;
-            Invoke("ReturnToRun", attackTime);
+            if (Input.GetButtonDown("Attack"))
+            {
+                //CancelInvoke();
+                
+                Instantiate(attackObject, transform.position, transform.rotation);
+                state = PlayerState.Attack;
+                Invoke("ReturnToRun", attackTime);
+                stamina -= attackStaminaCost;
+            }
         }
+
+
+        
     }
 
     void StartReturningToRun(float time)
@@ -167,18 +229,40 @@ public class PlayerController : MonoBehaviour {
 
     Vector2 RecoverSpeed()
     {
+        //recovering = rigid.velocity.x < MaxHoriSpeed;
+
+        //if (recovering)
+        //{
+        //    //HandleRecoveryAccTime();
+        //    Vector2 currentVelo = rigid.velocity;
+        //    //Vector2 nextStepVelo = Vector2.Lerp(currentVelo, new Vector2(MaxHoriSpeed, rigid.velocity.y), currentAccTime);
+        //    //return nextStepVelo;
+
+        //    return Vector2.MoveTowards(currentVelo, new Vector2(MaxHoriSpeed, rigid.velocity.y), 0.2f);
+
+        //}
+
+        //else
+        //{
+        //    return new Vector2(MaxHoriSpeed, rigid.velocity.y);
+        //}
+
         if (rigid.velocity.x < MaxHoriSpeed)
         {
-            HandleRecoveryAccTime();
+            return Vector2.MoveTowards(rigid.velocity, new Vector2(MaxHoriSpeed, rigid.velocity.y), 0.1f);
         }
-        Vector2 currentVelo = rigid.velocity;
-        Vector2 nextStepVelo = Vector2.Lerp(currentVelo, new Vector2(MaxHoriSpeed, rigid.velocity.y), currentAccTime);
-        return nextStepVelo;
+        else
+        {
+            Debug.Log("max speed");
+            return rigid.velocity;
+        }
+        
+
     }
 
     void HandleRecoveryAccTime()
     {
-        if (currentAccTime < 1f)
+        if (currentAccTime <= 1f)
         {
             currentAccTime += Time.deltaTime;
         }

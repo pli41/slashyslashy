@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Ghost : MonoBehaviour {
+public class Ghost : Enemy {
 
     public GameObject ghostBall;
     public float attackInterval;
     public float alertDistance;
     public PlayerController playerCtrl;
+    public Animator anim;
 
     public bool alerted;
 
@@ -14,27 +15,38 @@ public class Ghost : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        active = true;
         alerted = false;
         attackTimer = 0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        CheckDistance();
-        HandleAttack();
+        if (active)
+        {
+            CheckDistance();
+            HandleAttack();
+        }
+
+        
 	}
 
     void CheckDistance()
     {
+        if (playerCtrl)
+        {
+            if (Vector2.Distance(transform.position, playerCtrl.transform.position) < alertDistance)
+            {
+                alerted = true;
+            }
+            else
+            {
+                alerted = false;
+            }
+        }
+
         //Debug.Log(Vector2.Distance(transform.position, playerCtrl.transform.position));
-        if (Vector2.Distance(transform.position, playerCtrl.transform.position) < alertDistance)
-        {
-            alerted = true;
-        }
-        else
-        {
-            alerted = false;
-        }
+        
     }
 
     void HandleAttack()
@@ -48,10 +60,27 @@ public class Ghost : MonoBehaviour {
             else
             {
                 attackTimer = 0f;
-                Instantiate(ghostBall, transform.position, transform.rotation);
-                Debug.Log("Biu Biu Biu");
+                Attack();
             }
         }
-        
+    }
+
+    public override void Attack()
+    {
+        Debug.Log("Attack");
+        Instantiate(ghostBall, transform.position, transform.rotation);
+    }
+
+    public override void DestroySelf()
+    {
+        Debug.Log(gameObject + " starts to destroy itself");
+        active = false;
+        anim.SetTrigger("Die");
+        Invoke("DestroyObject", 2f);
+    }
+
+    public void DestroyObject()
+    {
+        base.DestroySelf();
     }
 }
