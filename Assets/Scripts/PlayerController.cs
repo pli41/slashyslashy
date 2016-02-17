@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour {
     public bool isDead;
 
     public Vector2 currentSpeed;
+    public bool locked;
+
 
     void Awake()
     {
@@ -80,7 +82,10 @@ public class PlayerController : MonoBehaviour {
         }
         else if (state == PlayerState.Stun)
         {
+            Debug.Log("Stunned");
             rigid.velocity = new Vector2(0, 0);
+            locked = true;
+            Invoke("Unlock", stunRecoverTime);
         }
     }
 
@@ -88,12 +93,46 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         currentSpeed = rigid.velocity;
 
-        
+        if (state == PlayerState.Run)
+        {
+
+        }
+        else if (state == PlayerState.Attack)
+        {
+
+        }
+        else if (state == PlayerState.Jump)
+        {
+
+        }
+        else if (state == PlayerState.Def)
+        {
+
+        }
+        else if (state == PlayerState.Stun)
+        {
+            Debug.Log("Stunned");
+            locked = true;
+            Invoke("Unlock", stunRecoverTime);
+        }
+
+
+
+        if (!locked)
+        {
+            HandleAttack();
+            HandleJump();
+            HandleDef();
+            
+        }
         HandleDeath();
-        HandleAttack();
-        HandleJump();
-		HandleDef ();
         HandleStamina();
+    }
+
+    public void Unlock()
+    {
+        locked = false;
+        ReturnToRun();
     }
 
     public void HandleStamina()
@@ -190,6 +229,7 @@ public class PlayerController : MonoBehaviour {
 
     void ReturnToRun()
     {
+        
         state = PlayerState.Run;
         if (!collider.enabled)
         {

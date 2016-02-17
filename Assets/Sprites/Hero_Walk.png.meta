@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 071e4cc39c6516547a46d1e1fba79316
-timeCreated: 1455744973
+guid: f2cc7179d80fee141b5dfa786bfb7787
+timeCreated: 1455743191
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Shield_0
+    21300000: Hero_Walk_0
+    21300002: Hero_Walk_1
+    21300004: Hero_Walk_2
+    21300006: Hero_Walk_3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -51,13 +54,46 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Shield_0
+    - name: Hero_Walk_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 20
-        width: 6
-        height: 8
+        x: 4
+        y: 16
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Hero_Walk_1
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 16
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Hero_Walk_2
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 0
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: Hero_Walk_3
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 0
+        width: 8
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

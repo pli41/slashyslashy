@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: 071e4cc39c6516547a46d1e1fba79316
-timeCreated: 1455744973
+guid: b7d1ae4a410232044a3c0fa9e7c94042
+timeCreated: 1455743620
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: Shield_0
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -39,7 +38,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -50,18 +49,7 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: Shield_0
-      rect:
-        serializedVersion: 2
-        x: 13
-        y: 20
-        width: 6
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
+    sprites: []
     outline: []
   spritePackingTag: 
   userData: 

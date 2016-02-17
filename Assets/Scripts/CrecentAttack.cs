@@ -25,13 +25,13 @@ public class CrecentAttack : Projectile {
             {
                 col.GetComponent<Destroyable>().StartDestroy();
                 //Debug.Log("Destroy box");
-                active = false;
+                //active = false;
             }
             else if (col.tag == "Enemy")
             {
                 col.gameObject.SendMessage("ReceiveDamage", damage);
                 Debug.Log(col.gameObject);
-                active = false;
+                //active = false;
             }
         }
 
