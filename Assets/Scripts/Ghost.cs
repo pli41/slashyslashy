@@ -10,7 +10,7 @@ public class Ghost : Enemy {
     public Animator anim;
 
     public bool alerted;
-
+    public bool attackReady;
     float attackTimer;
 
 	// Use this for initialization
@@ -18,6 +18,7 @@ public class Ghost : Enemy {
         active = true;
         alerted = false;
         attackTimer = 0f;
+        attackReady = true;
 	}
 	
 	// Update is called once per frame
@@ -27,8 +28,6 @@ public class Ghost : Enemy {
             CheckDistance();
             HandleAttack();
         }
-
-        
 	}
 
     void CheckDistance()
@@ -53,21 +52,29 @@ public class Ghost : Enemy {
     {
         if (alerted)
         {
-            if (attackTimer < attackInterval)
+            if (!attackReady)
             {
-                attackTimer += Time.deltaTime;
+                if (attackTimer < attackInterval)
+                {
+                    attackTimer += Time.deltaTime;
+                }
+                else
+                {
+                    attackTimer = 0f;
+                    attackReady = true;
+                }
             }
             else
             {
-                attackTimer = 0f;
+                attackReady = false;
                 Attack();
             }
+            
         }
     }
 
     public override void Attack()
     {
-        Debug.Log("Attack");
         Instantiate(ghostBall, transform.position, transform.rotation);
     }
 

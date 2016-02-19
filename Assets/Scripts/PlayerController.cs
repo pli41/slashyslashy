@@ -5,6 +5,10 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour {
 
     public Animator animator;
+    public Animator weaponAnimator;
+
+    public WeaponController weaponC;
+
     public Rigidbody2D rigid;
 
     public enum PlayerState{ Run, Attack, Jump, Def, Stun};
@@ -63,30 +67,35 @@ public class PlayerController : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (state == PlayerState.Run)
+        if (!locked)
         {
-            rigid.velocity = new Vector2(MaxHoriSpeed, rigid.velocity.y);
-            //rigid.velocity = RecoverSpeed();
+            if (state == PlayerState.Run)
+            {
+                rigid.velocity = new Vector2(MaxHoriSpeed, rigid.velocity.y);
+                //rigid.velocity = RecoverSpeed();
+            }
+            else if (state == PlayerState.Attack)
+            {
+                rigid.velocity = new Vector2(attackMoveSpeed, rigid.velocity.y);
+            }
+            else if (state == PlayerState.Jump)
+            {
+                rigid.gravityScale = inAirGravityScale;
+            }
+            else if (state == PlayerState.Def)
+            {
+                rigid.velocity = new Vector2(MaxHoriSpeed / 2f, rigid.velocity.y);
+            }
+            else if (state == PlayerState.Stun)
+            {
+                Debug.Log("Stunned");
+                rigid.velocity = new Vector2(0, 0);
+                locked = true;
+                Invoke("Unlock", stunRecoverTime);
+            }
         }
-        else if (state == PlayerState.Attack)
-        {
-            rigid.velocity = new Vector2(attackMoveSpeed, 0);
-        }
-        else if (state == PlayerState.Jump)
-        {
-            rigid.gravityScale = inAirGravityScale;
-        }
-        else if (state == PlayerState.Def)
-        {
-            rigid.velocity = new Vector2(MaxHoriSpeed/2f, rigid.velocity.y);
-        }
-        else if (state == PlayerState.Stun)
-        {
-            Debug.Log("Stunned");
-            rigid.velocity = new Vector2(0, 0);
-            locked = true;
-            Invoke("Unlock", stunRecoverTime);
-        }
+
+        
     }
 
 	// Update is called once per frame
@@ -121,16 +130,22 @@ public class PlayerController : MonoBehaviour {
         if (!locked)
         {
             HandleAttack();
+            HandleAbility();
             HandleJump();
             HandleDef();
-            
         }
         HandleDeath();
         HandleStamina();
     }
 
+    public void HandleLock()
+    {
+
+    }
+
     public void Unlock()
     {
+        Debug.Log("Unlock");
         locked = false;
         ReturnToRun();
     }
@@ -170,7 +185,7 @@ public class PlayerController : MonoBehaviour {
                 shield.GetComponent<Shield>().active = true;
                 stamina -= defStaminaSpeed * Time.deltaTime;
             }
-            else
+            if(Input.GetButtonUp("Def"))
             {
                 state = PlayerState.Run;
                 shield.GetComponent<Shield>().active = false;
@@ -193,7 +208,7 @@ public class PlayerController : MonoBehaviour {
         if (isDead)
         {
             animator.SetTrigger("Die");
-            Invoke("DisablePlayer", 1f);
+            Invoke("DisablePlayer", 0.5f);
 
         }
     }
@@ -205,9 +220,20 @@ public class PlayerController : MonoBehaviour {
 
     void HandleAttack()
     {
+        if (Input.GetButtonDown("Attack"))
+        {
+            //Debug.Log("Attack");
+            weaponC.Attack();
+            state = PlayerState.Attack;
+            Invoke("ReturnToRun", attackTime);
+        }
+    }
+
+    void HandleAbility()
+    {
         if (CheckStamina(attackStaminaCost))
         {
-            if (Input.GetButtonDown("Attack"))
+            if (Input.GetButtonDown("Ability1"))
             {
                 //CancelInvoke();
                 
@@ -229,7 +255,6 @@ public class PlayerController : MonoBehaviour {
 
     void ReturnToRun()
     {
-        
         state = PlayerState.Run;
         if (!collider.enabled)
         {

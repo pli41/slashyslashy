@@ -19,14 +19,18 @@ public class FrontChecker : MonoBehaviour {
     {
 
 
-        if (col.tag == "Obstacle")
+        if (col.tag == "Obstacle" )
         {
-            Debug.Log("Colliding with " + col.gameObject.name);
-            playerCtrl.state = PlayerController.PlayerState.Stun;
-            col.gameObject.SendMessage("StartDestroy");
-            playerCtrl.collider.enabled = false;
-            playerCtrl.animator.ResetTrigger("ReturnToRun");
-            playerCtrl.animator.SetTrigger("Stun");
+            if (col.gameObject.GetComponent<Destroyable>().active && playerCtrl.state != PlayerController.PlayerState.Attack)
+            {
+                //Debug.Log("Colliding with " + col.gameObject.name);
+                playerCtrl.state = PlayerController.PlayerState.Stun;
+                col.gameObject.SendMessage("StartDestroy");
+                playerCtrl.collider.enabled = false;
+                playerCtrl.animator.ResetTrigger("ReturnToRun");
+                playerCtrl.animator.SetTrigger("Stun");
+            }
+            
             
         }
         else if (col.tag == "EnemyAttack") {

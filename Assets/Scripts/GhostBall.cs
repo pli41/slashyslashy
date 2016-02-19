@@ -22,7 +22,7 @@ public class GhostBall : EnemyProjectile {
     {
         if (col.tag != "Enemy")
         {
-            Debug.Log("collide");
+            Debug.Log("collide with " + col.gameObject);
             DestroySelf();
         }
 

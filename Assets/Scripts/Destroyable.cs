@@ -5,6 +5,7 @@ public class Destroyable : MonoBehaviour {
 
     public Animator anim;
     public Collider2D col;
+    public bool active;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +20,8 @@ public class Destroyable : MonoBehaviour {
 
     public void StartDestroy()
     {
+
+        active = false;
         anim.SetTrigger("Destroy");
         col.enabled = false;
         float animationLength = anim.GetCurrentAnimatorStateInfo(0).length;
