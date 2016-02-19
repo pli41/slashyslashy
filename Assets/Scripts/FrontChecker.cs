@@ -29,25 +29,23 @@ public class FrontChecker : MonoBehaviour {
                 playerCtrl.collider.enabled = false;
                 playerCtrl.animator.ResetTrigger("ReturnToRun");
                 playerCtrl.animator.SetTrigger("Stun");
-            }
-            
-            
+            } 
         }
-        else if (col.tag == "EnemyAttack") {
-            //Debug.Log("666");
-			EnemyAttack ep = col.GetComponent<EnemyAttack>();
-            if (ep)
-            {
-                if (ep.active)
-                {
-					Debug.Log ("Damage received");
-                    playerCtrl.HandleDamage(ep.damage);
-                }
+   //     else if (col.tag == "EnemyAttack") {
+   //         //Debug.Log("666");
+			//EnemyAttack ep = col.GetComponent<EnemyAttack>();
+   //         if (ep)
+   //         {
+   //             if (ep.active)
+   //             {
+			//		Debug.Log ("Damage received");
+   //                 playerCtrl.HandleDamage(ep.damage);
+   //             }
                 
-            }
+   //         }
             
 
-        }
+   //     }
 
 
         

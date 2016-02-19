@@ -20,13 +20,17 @@ public class GhostBall : EnemyProjectile {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag != "Enemy")
+        if (col.tag == "Player" && col.name == "FrontCheck" && active)
+        {
+            col.transform.parent.gameObject.GetComponent<PlayerController>().SendMessage("HandleDamage", damage);
+        }
+
+
+        if (col.tag == "Ground" && col.tag == "Obstacle")
         {
             Debug.Log("collide with " + col.gameObject);
             DestroySelf();
         }
-
-        
     }
 
 	public override void DestroySelf(){

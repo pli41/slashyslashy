@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour {
     public Vector2 currentSpeed;
     public bool locked;
 
+    bool lockInvoked;
 
     void Awake()
     {
@@ -91,7 +92,12 @@ public class PlayerController : MonoBehaviour {
                 Debug.Log("Stunned");
                 rigid.velocity = new Vector2(0, 0);
                 locked = true;
-                Invoke("Unlock", stunRecoverTime);
+                if (!lockInvoked)
+                {
+                    Invoke("Unlock", stunRecoverTime);
+                    lockInvoked = true;
+                }
+                
             }
         }
 
@@ -145,6 +151,7 @@ public class PlayerController : MonoBehaviour {
 
     public void Unlock()
     {
+        lockInvoked = false;
         Debug.Log("Unlock");
         locked = false;
         ReturnToRun();
