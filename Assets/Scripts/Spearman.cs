@@ -39,7 +39,7 @@ public class Spearman : Enemy {
     {
         if (!stopped)
         {
-            rigid.velocity = new Vector2(MaxHoriSpeed, 0f);
+            rigid.velocity = new Vector2(MaxHoriSpeed, rigid.velocity.y);
         }
         
     }

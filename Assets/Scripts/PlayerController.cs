@@ -135,8 +135,12 @@ public class PlayerController : MonoBehaviour {
         else if (state == PlayerState.Stun)
         {
             Debug.Log("Stunned");
-            locked = true;
-            Invoke("Unlock", stunRecoverTime);
+            if (!locked)
+            {
+                locked = true;
+                Invoke("Unlock", stunRecoverTime);
+            }
+            
         }
         else if (state == PlayerState.onHit)
         {
@@ -146,7 +150,6 @@ public class PlayerController : MonoBehaviour {
                 hit = true;
                 Invoke("ReturnToRun", onHitRecoverTime);
             }
-            
         }
 
 
