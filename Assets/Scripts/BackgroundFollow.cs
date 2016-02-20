@@ -13,6 +13,8 @@ public class BackgroundFollow : MonoBehaviour {
     public MeshRenderer rend;
     public PlayerController pc;
 
+    public GameManager gm;
+
     public float scrollOffset;
 
 	// Use this for initialization
@@ -23,14 +25,22 @@ public class BackgroundFollow : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //adjust scrollings speed
-        if (pc)
+        if (gm.isMainMenu)
         {
-            scrollingSpeed = pc.currentSpeed.x / pc.MaxHoriSpeed * maxScrollingSpeed;
+            scrollingSpeed = maxScrollingSpeed;
         }
         else
         {
-            scrollingSpeed = 0;
+            if (pc)
+            {
+                scrollingSpeed = pc.currentSpeed.x / pc.MaxHoriSpeed * maxScrollingSpeed;
+            }
+            else
+            {
+                scrollingSpeed = 0;
+            }
         }
+        
 
         if (playerT)
         {

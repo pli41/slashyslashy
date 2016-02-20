@@ -10,10 +10,16 @@ public class Shield : MonoBehaviour {
     public float blockStaminaCost;
     public PlayerController playerCtrl;
 
+    public AudioClip block;
+
+    public bool blockInvoked;
+
+    AudioSource aus;
 
 	// Use this for initialization
 	void Start () {
 		active = false;
+        aus = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -41,7 +47,15 @@ public class Shield : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col){
 		if(col.tag == "EnemyAttack"){
-			col.GetComponent<EnemyAttack> ().DestroySelf ();
+            col.GetComponent<EnemyAttack>().DestroySelf();
+            anim.SetTrigger("Block");
+            if (!blockInvoked)
+            {
+                Invoke("ResetTrigger", 0.5f);
+                blockInvoked = true;
+            }
+            PlayAudio(block);
+			
             playerCtrl.stamina -= blockStaminaCost;
             if (playerCtrl.stamina < 0)
             {
@@ -49,4 +63,17 @@ public class Shield : MonoBehaviour {
             }
 		}
 	}
+
+    void PlayAudio(AudioClip clip)
+    {
+            aus.Stop();
+            aus.PlayOneShot(clip);
+        
+    }
+
+    void ResetTrigger()
+    {
+        blockInvoked = false;
+        anim.ResetTrigger("Block");
+    }
 }

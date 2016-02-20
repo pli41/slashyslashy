@@ -26,7 +26,7 @@ public class GhostBall : EnemyProjectile {
         }
 
 
-        if (col.tag == "Ground" && col.tag == "Obstacle")
+        if (col.tag == "Ground" || col.tag == "Obstacle")
         {
             Debug.Log("collide with " + col.gameObject);
             DestroySelf();

@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
+    public GameManager gm;
+
+
+
     public Animator animator;
     public Animator weaponAnimator;
 
@@ -51,16 +55,22 @@ public class PlayerController : MonoBehaviour {
 
     public float onHitRecoverTime;
 
+    public AudioClip jump;
+    public AudioClip attack;
+
     bool lockInvoked;
     bool hit;
+    AudioSource aus;
 
     //bool onHitInvoked;
 
     void Awake()
     {
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         animator = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
+        aus = GetComponent<AudioSource>();
     }
 
 	// Use this for initialization
@@ -77,7 +87,15 @@ public class PlayerController : MonoBehaviour {
         {
             if (state == PlayerState.Run)
             {
-                rigid.velocity = new Vector2(MaxHoriSpeed, rigid.velocity.y);
+                if (gm.isMainMenu)
+                {
+                    rigid.velocity = new Vector2(0, rigid.velocity.y);
+                }
+                else
+                {
+                    rigid.velocity = new Vector2(MaxHoriSpeed, rigid.velocity.y);
+                }
+                
                 //rigid.velocity = RecoverSpeed();
             }
             else if (state == PlayerState.Attack)
@@ -116,9 +134,14 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         currentSpeed = rigid.velocity;
 
+        if (gm.isMainMenu)
+        {
+            locked = true;
+            state = PlayerState.Run;
+        }
+
         if (state == PlayerState.Run)
         {
-
         }
         else if (state == PlayerState.Attack)
         {
@@ -250,6 +273,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetButtonDown("Attack"))
         {
             //Debug.Log("Attack");
+           
             weaponC.Attack();
             state = PlayerState.Attack;
             Invoke("ReturnToRun", attackTime);
@@ -263,7 +287,7 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetButtonDown("Ability1"))
             {
                 //CancelInvoke();
-                
+                PlayAudio(attack);
                 Instantiate(attackObject, transform.position, transform.rotation);
                 state = PlayerState.Attack;
                 Invoke("ReturnToRun", attackTime);
@@ -299,6 +323,7 @@ public class PlayerController : MonoBehaviour {
             {
                 if (!inAir)
                 {
+                    PlayAudio(jump);
                     Debug.Log("Jump");
                     rigid.AddForce(jumpForce);
                     inAir = true;
@@ -366,4 +391,9 @@ public class PlayerController : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    public void PlayAudio(AudioClip clip)
+    {
+        aus.Stop();
+        aus.PlayOneShot(clip);
+    }
 }

@@ -3,16 +3,20 @@ using System.Collections;
 
 public class WeaponController : MonoBehaviour {
 
+    public PlayerController pc;
     public Animator weaponAnimator;
     public float attackSpeed; // Per second
     public bool attackReady;
+
+    public Collider2D weaponCol;
 
     float attackSpeedTimer;
 
 
 	// Use this for initialization
 	void Start () {
-	
+        weaponCol.enabled = false;
+        pc = transform.parent.GetComponent<PlayerController>();
 	}
 	
 	// Update is called once per frame
@@ -37,8 +41,10 @@ public class WeaponController : MonoBehaviour {
     {
         if (attackReady)
         {
+            weaponCol.enabled = true;
+            pc.PlayAudio(pc.attack);
             weaponAnimator.SetTrigger("Attack");
-            Invoke("ResetAttack", 0.5f);
+            Invoke("ResetAttack", 1f);
             attackReady = false;
         }
         
@@ -46,6 +52,8 @@ public class WeaponController : MonoBehaviour {
 
     void ResetAttack()
     {
+        //attacked = false;
+        weaponCol.enabled = false;
         weaponAnimator.ResetTrigger("Attack");
     }
 
