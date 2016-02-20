@@ -38,8 +38,8 @@ public class PlayerController : MonoBehaviour {
     public float stamina;
     public Slider staminaSlider;
     public float staminaRecoverySpeed;
-   
 
+    public GameObject thoughBubble;
 
     public bool grounded;
     public bool inAir;
@@ -138,6 +138,11 @@ public class PlayerController : MonoBehaviour {
         {
             locked = true;
             state = PlayerState.Run;
+            thoughBubble.SetActive(true);
+        }
+        else
+        {
+            thoughBubble.SetActive(false);
         }
 
         if (state == PlayerState.Run)

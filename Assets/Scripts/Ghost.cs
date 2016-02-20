@@ -13,12 +13,18 @@ public class Ghost : Enemy {
     public bool attackReady;
     float attackTimer;
 
+    public AudioClip death;
+    public AudioClip attack;
+
+    AudioSource aus;
+
 	// Use this for initialization
 	void Start () {
         active = true;
         alerted = false;
         attackTimer = 0f;
         attackReady = true;
+        aus = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -88,11 +94,18 @@ public class Ghost : Enemy {
         Debug.Log(gameObject + " starts to destroy itself");
         active = false;
         anim.SetTrigger("Die");
+        PlayAudio(death);
         Invoke("DestroyObject", 2f);
     }
 
     public void DestroyObject()
     {
         base.DestroySelf();
+    }
+
+    public void PlayAudio(AudioClip clip)
+    {
+        aus.Stop();
+        aus.PlayOneShot(clip);
     }
 }

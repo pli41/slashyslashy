@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour {
     public AudioClip win;
 
     public float timeLimit;
-    public float timeLeft;
+    public int timeLeft;
 
     public bool timeUp;
     public bool isMainMenu;
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
         
 
 
-        timeLeft = timeLimit - timer;
+        timeLeft = (int)(timeLimit - timer);
 
         if (timeLeft > 0)
         {
