@@ -73,6 +73,11 @@ public class Ghost : Enemy {
         }
     }
 
+    public override void ReceiveDamage(int damage)
+    {
+        base.ReceiveDamage(damage);
+    }
+
     public override void Attack()
     {
         Instantiate(ghostBall, transform.position, transform.rotation);

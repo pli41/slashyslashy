@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour {
 
     public Rigidbody2D rigid;
 
-    public enum PlayerState{ Run, Attack, Jump, Def, Stun};
+    public enum PlayerState{ Run, Attack, Jump, Def, Stun, onHit};
     public PlayerState state;
 
     public float attackMoveSpeed;
@@ -49,7 +49,12 @@ public class PlayerController : MonoBehaviour {
     public Vector2 currentSpeed;
     public bool locked;
 
+    public float onHitRecoverTime;
+
     bool lockInvoked;
+    bool hit;
+
+    //bool onHitInvoked;
 
     void Awake()
     {
@@ -97,6 +102,9 @@ public class PlayerController : MonoBehaviour {
                     Invoke("Unlock", stunRecoverTime);
                     lockInvoked = true;
                 }
+            }
+            else if (state == PlayerState.onHit)
+            {
                 
             }
         }
@@ -130,10 +138,19 @@ public class PlayerController : MonoBehaviour {
             locked = true;
             Invoke("Unlock", stunRecoverTime);
         }
+        else if (state == PlayerState.onHit)
+        {
+            
+            if (!hit)
+            {
+                hit = true;
+                Invoke("ReturnToRun", onHitRecoverTime);
+            }
+            
+        }
 
 
-
-        if (!locked)
+        if (!locked && !hit)
         {
             HandleAttack();
             HandleAbility();
@@ -262,6 +279,7 @@ public class PlayerController : MonoBehaviour {
 
     void ReturnToRun()
     {
+        hit = false;
         state = PlayerState.Run;
         if (!collider.enabled)
         {

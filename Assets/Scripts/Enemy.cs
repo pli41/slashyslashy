@@ -5,6 +5,7 @@ public class Enemy : MonoBehaviour {
 
     public int hp;
     public bool active;
+    public int damage;
 
 	// Use this for initialization
 	void Start () {
@@ -16,7 +17,7 @@ public class Enemy : MonoBehaviour {
 	
 	}
 
-    public void ReceiveDamage(int damage)
+    public virtual void ReceiveDamage(int damage)
     {
         hp -= damage;
         if (hp <= 0)
