@@ -85,6 +85,12 @@ public class GameManager : MonoBehaviour {
     public void Endgame(bool win)
     {
         endGame = true;
+        if (win)
+        {
+            Debug.Log("play win sound");
+            BGM.Stop();
+            BGM.PlayOneShot(this.win);
+        }
         UIManager.ShowEndPanel(win);
     }
 
