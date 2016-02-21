@@ -47,6 +47,14 @@ public class Shield : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col){
 		if(col.tag == "EnemyAttack"){
+            //playerCtrl.stamina -= blockStaminaCost;
+            //if (playerCtrl.stamina < 0)
+            //{
+            //    playerCtrl.stamina = 0;
+            //    playerCtrl.state = PlayerController.PlayerState.Run;
+            //}
+
+
             col.GetComponent<EnemyAttack>().DestroySelf();
             anim.SetTrigger("Block");
             if (!blockInvoked)
@@ -56,18 +64,14 @@ public class Shield : MonoBehaviour {
             }
             PlayAudio(block);
 			
-            playerCtrl.stamina -= blockStaminaCost;
-            if (playerCtrl.stamina < 0)
-            {
-                playerCtrl.stamina = 0;
-            }
+            
 		}
 	}
 
     void PlayAudio(AudioClip clip)
     {
-            aus.Stop();
-            aus.PlayOneShot(clip);
+        aus.Stop();
+        aus.PlayOneShot(clip);
         
     }
 

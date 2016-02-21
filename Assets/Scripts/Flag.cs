@@ -30,12 +30,13 @@ public class Flag : MonoBehaviour {
     {
         if (col.tag == "Player")
         {
-            col.transform.parent.GetComponent<Rigidbody2D>().velocity = new Vector2(0, col.transform.parent.GetComponent<Rigidbody2D>().velocity.y);
+            GameObject player = GameObject.Find("Player");
+            player.GetComponent<Rigidbody2D>().velocity = new Vector2(0, player.GetComponent<Rigidbody2D>().velocity.y);
         }
     }
 
     void Win()
     {
-        gm.Win();
+        gm.Endgame(true);
     }
 }

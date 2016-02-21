@@ -18,7 +18,16 @@ public class KillZone : MonoBehaviour {
     {
         if (col.tag == "Player")
         {
-            SceneManager.LoadScene(LevelManager.currentLevel);
+            GameObject.Find("Player").GetComponent<PlayerController>().DisablePlayer();
+            //SceneManager.LoadScene(LevelManager.currentLevel);
+        }
+        else if (col.tag == "Obstacle")
+        {
+            col.GetComponent<Destroyable>().StartDestroy();
+        }
+        else if (col.tag == "Enemy")
+        {
+            col.gameObject.SendMessage("DestroySelf");
         }
     }
 }

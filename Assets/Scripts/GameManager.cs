@@ -4,6 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
+    public GameObject player;
+    public UIManager_Level UIManager;
+
     public Rigidbody2D playerRigid;
     public AudioSource BGM;
 
@@ -15,28 +18,38 @@ public class GameManager : MonoBehaviour {
     public bool timeUp;
     public bool isMainMenu;
 
+    public bool endGame;
+
     private float timer;
+    
 	// Use this for initialization
 	void Start () {
-        
+        endGame = false;
         playerRigid = GameObject.Find("Player").GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (!isMainMenu)
+        {
+            CheckPlayerExist();
+            timeLeft = (int)(timeLimit - timer);
+
+            if (timeLeft > 0)
+            {
+                if (!endGame)
+                {
+                    timer += Time.deltaTime;
+                }
+                
+            }
+            else
+            {
+                Endgame(false);
+            }
+        }
         
-
-
-        timeLeft = (int)(timeLimit - timer);
-
-        if (timeLeft > 0)
-        {
-            timer += Time.deltaTime;
-        }
-        else
-        {
-            
-        }
 	}
 
     void FixedUpdate()
@@ -44,20 +57,40 @@ public class GameManager : MonoBehaviour {
 
     }
 
-    public void Win()
+    public void CheckPlayerExist()
     {
-        BGM.Stop();
-        BGM.PlayOneShot(win);
-        Invoke("LoadNextLevel", 2f);
-    } 
+        if (!GameObject.FindGameObjectWithTag("Player"))
+        {
+            Debug.Log("player not exist");
+            Endgame(false);
+        }
+    }
 
-    void LoadNextLevel()
+    public void Endgame(bool win)
+    {
+        endGame = true;
+        UIManager.ShowEndPanel(win);
+    }
+
+
+    public void LoadNextLevel()
     {
         string currentLevel = LevelManager.currentLevel;
         Debug.Log(currentLevel);
         int levelNum = int.Parse(currentLevel[currentLevel.Length - 1].ToString()) + 1;
         Debug.Log(levelNum);
         string newLevel = currentLevel.Remove(currentLevel.Length-1, 1) + levelNum.ToString();
+        LevelManager.currentLevel = newLevel;
         SceneManager.LoadScene(newLevel);
+    }
+
+    public void ReloadLevel()
+    {
+        SceneManager.LoadScene(LevelManager.currentLevel);
+    }
+
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

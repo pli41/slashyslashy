@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Spearman : Enemy {
 
+    public GameObject player;
     public Rigidbody2D rigid;
     public float MaxHoriSpeed;
     public float horiForce;
@@ -13,16 +14,21 @@ public class Spearman : Enemy {
 
     public Animator anim;
 
+    public float alertDistance;
+
     public bool damageable;
     public float damageResetTime;
+    public bool stopCheck;
+
 
 	// Use this for initialization
     void Awake()
     {
         damageable = true;
-        stopped = false;
+        stopped = true;
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        player = GameObject.Find("Player");
     }
 
 	void Start () {
@@ -32,8 +38,27 @@ public class Spearman : Enemy {
 	
 	// Update is called once per frame
 	void Update () {
-	    
+        if (stopped && !stopCheck)
+        {
+            CheckDistance();
+        }
+        
 	}
+
+    void CheckDistance()
+    {
+        if (player)
+        {
+            if (Vector2.Distance(transform.position, player.transform.position) < alertDistance)
+            {
+                stopped = false;
+                stopCheck = true;
+            }
+        }
+
+        //Debug.Log(Vector2.Distance(transform.position, playerCtrl.transform.position));
+
+    }
 
     void FixedUpdate()
     {
@@ -41,7 +66,6 @@ public class Spearman : Enemy {
         {
             rigid.velocity = new Vector2(MaxHoriSpeed, rigid.velocity.y);
         }
-        
     }
 
     public override void ReceiveDamage(int damage)
@@ -76,6 +100,7 @@ public class Spearman : Enemy {
 
     void StopRecover()
     {
+        Debug.Log("Recovered");
         stopped = false;
     }
 
@@ -85,63 +110,84 @@ public class Spearman : Enemy {
         {
             if (col.tag == "Player")
             {
-                if (col.name == "FrontCheck")
+
+                if (col.name == "Shield")
+                {
+                    PlayerController pc = col.transform.parent.GetComponent<PlayerController>();
+                    pc.state = PlayerController.PlayerState.onHit;
+                    //Debug.Break();
+                    col.transform.parent.GetComponent<Rigidbody2D>().AddForce(new Vector2(horiForce, 100f));
+                    if (!stopped)
+                    {
+                        stopped = true;
+                        Debug.Log("Spearman Stopped;");
+                        Invoke("StopRecover", stopRecoverTime);
+                    }
+                }
+
+                else if (col.name == "FrontCheck")
                 {
                     Debug.Log("Collide with front check");
-
-                    col.transform.parent.GetComponent<Rigidbody2D>().AddForce(new Vector2(horiForce, 100f));
+                    //Debug.Break();
                     PlayerController pc = col.transform.parent.GetComponent<PlayerController>();
-                    
-
+                    col.transform.parent.GetComponent<Rigidbody2D>().AddForce(new Vector2(horiForce, 100f));
                     if (pc.state != PlayerController.PlayerState.Def)
                     {
                         pc.state = PlayerController.PlayerState.Stun;
                         pc.HandleDamage(damage);
                     }
-                    pc.state = PlayerController.PlayerState.onHit;
-
                     if (!stopped)
                     {
                         stopped = true;
+                        Debug.Log("Spearman Stopped;");
                         Invoke("StopRecover", stopRecoverTime);
                     }
-                    
                 }
             }
-        }
-    }
-
-    void OnTriggerStay2D(Collider2D col)
-    {
-        if (active && !stopped)
-        {
-            if (col.tag == "Player")
+            else if (col.tag == "Obstacle")
             {
-                if (col.name == "FrontCheck")
-                {
-                    Debug.Log("Collide with front check");
-
-                    col.transform.parent.GetComponent<Rigidbody2D>().AddForce(new Vector2(horiForce, 100f));
-                    PlayerController pc = col.transform.parent.GetComponent<PlayerController>();
-
-
-                    if (pc.state != PlayerController.PlayerState.Def)
-                    {
-                        pc.state = PlayerController.PlayerState.Stun;
-                        pc.HandleDamage(damage);
-                    }
-                    pc.state = PlayerController.PlayerState.onHit;
-
-                    if (!stopped)
-                    {
-                        stopped = true;
-                        Invoke("StopRecover", stopRecoverTime);
-                    }
-
-                }
-
-
+                col.GetComponent<Rigidbody2D>().AddForce(new Vector2(horiForce, 100f));
             }
         }
     }
+
+    //void OnTriggerStay2D(Collider2D col)
+    //{
+    //    if (active && !stopped)
+    //    {
+    //        if (col.tag == "Player")
+    //        {
+
+
+    //            if (col.name == "Shield")
+    //            {
+    //                PlayerController pc = col.transform.parent.GetComponent<PlayerController>();
+    //                pc.state = PlayerController.PlayerState.onHit;
+    //                Debug.Break();
+    //                col.transform.parent.GetComponent<Rigidbody2D>().AddForce(new Vector2(horiForce, 100f));
+    //            }
+
+    //            else if (col.name == "FrontCheck")
+    //            {
+    //                Debug.Log("Collide with front check");
+    //                //Debug.Break();
+    //                PlayerController pc = col.transform.parent.GetComponent<PlayerController>();
+    //                col.transform.parent.GetComponent<Rigidbody2D>().AddForce(new Vector2(horiForce, 100f));
+    //                if (pc.state != PlayerController.PlayerState.Def)
+    //                {
+    //                    pc.state = PlayerController.PlayerState.Stun;
+    //                    pc.HandleDamage(damage);
+    //                }
+    //            }
+
+    //            if (!stopped)
+    //            {
+    //                stopped = true;
+    //                Invoke("StopRecover", stopRecoverTime);
+    //            }
+
+
+    //        }
+    //    }
+    //}
 }

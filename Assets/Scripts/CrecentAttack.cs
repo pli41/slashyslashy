@@ -30,7 +30,7 @@ public class CrecentAttack : Projectile {
             else if (col.tag == "Enemy")
             {
                 col.gameObject.SendMessage("ReceiveDamage", damage);
-                Debug.Log(col.gameObject);
+                //Debug.Log(col.gameObject);
                 //active = false;
             }
         }

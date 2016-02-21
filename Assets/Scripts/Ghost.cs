@@ -20,6 +20,7 @@ public class Ghost : Enemy {
 
 	// Use this for initialization
 	void Start () {
+        playerCtrl = GameObject.Find("Player").GetComponent<PlayerController>();
         active = true;
         alerted = false;
         attackTimer = 0f;
@@ -95,7 +96,7 @@ public class Ghost : Enemy {
         active = false;
         anim.SetTrigger("Die");
         PlayAudio(death);
-        Invoke("DestroyObject", 2f);
+        Invoke("DestroyObject", 1f);
     }
 
     public void DestroyObject()

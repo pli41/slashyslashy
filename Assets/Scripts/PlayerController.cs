@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject shield;
     public float attackTime;
     public float attackStaminaCost;
-    public float defStaminaSpeed;
+    public float defStamina;
 
     public float MaxHoriSpeed;
     public float accelerationTime;
@@ -58,8 +58,10 @@ public class PlayerController : MonoBehaviour {
     public AudioClip jump;
     public AudioClip attack;
 
+    public float destroyIncreaseStamina;
+
     bool lockInvoked;
-    bool hit;
+    public bool hit;
     AudioSource aus;
 
     //bool onHitInvoked;
@@ -87,7 +89,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (state == PlayerState.Run)
             {
-                if (gm.isMainMenu)
+                if (gm.isMainMenu || gm.endGame)
                 {
                     rigid.velocity = new Vector2(0, rigid.velocity.y);
                 }
@@ -134,7 +136,7 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         currentSpeed = rigid.velocity;
 
-        if (gm.isMainMenu)
+        if (gm.isMainMenu || gm.endGame)
         {
             locked = true;
             state = PlayerState.Run;
@@ -172,7 +174,7 @@ public class PlayerController : MonoBehaviour {
         }
         else if (state == PlayerState.onHit)
         {
-            
+            //Debug.Break();
             if (!hit)
             {
                 hit = true;
@@ -231,20 +233,29 @@ public class PlayerController : MonoBehaviour {
     }
 
 	public void HandleDef(){
-        if (CheckStamina(defStaminaSpeed*Time.deltaTime))
+        if (CheckStamina(defStamina))
         {
-            if (Input.GetButton("Def"))
+            if (Input.GetButton("Def") && state != PlayerController.PlayerState.onHit)
             {
-
+                if (state != PlayerState.Def)
+                {
+                    stamina -= defStamina;
+                }
                 state = PlayerState.Def;
                 shield.GetComponent<Shield>().active = true;
-                stamina -= defStaminaSpeed * Time.deltaTime;
+
             }
+
             if(Input.GetButtonUp("Def"))
             {
                 state = PlayerState.Run;
                 shield.GetComponent<Shield>().active = false;
             }
+        }
+        else
+        {
+            state = PlayerState.Run;
+            shield.GetComponent<Shield>().active = false;
         }
 		
 	}
@@ -329,7 +340,7 @@ public class PlayerController : MonoBehaviour {
                 if (!inAir)
                 {
                     PlayAudio(jump);
-                    Debug.Log("Jump");
+                    //Debug.Log("Jump");
                     rigid.AddForce(jumpForce);
                     inAir = true;
                     grounded = false;
@@ -391,7 +402,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void DisablePlayer()
+    public void DisablePlayer()
     {
         Destroy(gameObject);
     }

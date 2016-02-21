@@ -13,6 +13,7 @@ public class GameTimer : MonoBehaviour {
     public Image sliderFill;
     void Awake()
     {
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 

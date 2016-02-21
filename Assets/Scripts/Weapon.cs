@@ -25,6 +25,7 @@ public class Weapon : MonoBehaviour {
             {
                 col.GetComponent<Destroyable>().StartDestroy();
                 this.col.enabled = false;
+                pc.stamina += pc.destroyIncreaseStamina;
                 //Debug.Break();
                 Debug.Log("Destroy box by weapon");
                 //active = false;
@@ -33,11 +34,10 @@ public class Weapon : MonoBehaviour {
             {
                 col.gameObject.SendMessage("ReceiveDamage", damage);
                 this.col.enabled = false;
-                //Debug.Break();
-                //active = false;
-            }
-            
-        
+                pc.stamina += pc.destroyIncreaseStamina;
+            //Debug.Break();
+            //active = false;
+        }
     }
 
     void OnTriggerStay2D(Collider2D col)
@@ -46,17 +46,19 @@ public class Weapon : MonoBehaviour {
             {
                 col.GetComponent<Destroyable>().StartDestroy();
                 this.col.enabled = false;
-                //Debug.Break();
-                //Debug.Log("Destroy box by weapon");
-                //active = false;
-            }
+                pc.stamina += pc.destroyIncreaseStamina;    
+            //Debug.Break();
+            //Debug.Log("Destroy box by weapon");
+            //active = false;
+        }
             else if (col.tag == "Enemy")
             {
                 col.gameObject.SendMessage("ReceiveDamage", damage);
                 this.col.enabled = false;
-                //Debug.Break();
-                //active = false;
-            }
+                pc.stamina += pc.destroyIncreaseStamina;
+            //Debug.Break();
+            //active = false;
+        }
         
     }
 }
