@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (!isMainMenu)
+        if (!isMainMenu && !endGame)
         {
             CheckPlayerExist();
             timeLeft = (int)(timeLimit - timer);
@@ -55,6 +55,22 @@ public class GameManager : MonoBehaviour {
     void FixedUpdate()
     {
 
+    }
+
+    public void SetTimeSlowZones()
+    {
+        Debug.Log("Set timeslow zone");
+        GameObject[] slowzones = GameObject.FindGameObjectsWithTag("Slowzone");
+        if (PlayerPrefs.GetInt("Tutorial") == 0)
+        {
+            foreach (GameObject slowzone in slowzones)
+                slowzone.SetActive(false);
+        }
+        else
+        {
+            foreach (GameObject slowzone in slowzones)
+                slowzone.SetActive(true);
+        }
     }
 
     public void CheckPlayerExist()

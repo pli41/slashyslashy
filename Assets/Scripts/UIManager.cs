@@ -12,10 +12,12 @@ public class UIManager : MonoBehaviour {
     public Text creditBtn;
     public Text quitBtn;
 
+
     AudioSource aus;
 
 	// Use this for initialization
 	void Start () {
+        PlayerPrefs.SetInt("Tutorial", 1);
         aus = GetComponent<AudioSource>();
 	}
 	
@@ -85,5 +87,5 @@ public class UIManager : MonoBehaviour {
         aus.PlayOneShot(clip);
     }
     
-
+    
 }
