@@ -19,6 +19,8 @@ public class KillZone : MonoBehaviour {
         if (col.tag == "Player")
         {
             GameObject.Find("Player").GetComponent<PlayerController>().DisablePlayer();
+            DeathCount.deathCount--;
+            
             //SceneManager.LoadScene(LevelManager.currentLevel);
         }
         else if (col.tag == "Obstacle")
