@@ -33,11 +33,13 @@ public class UIManager_Level : MonoBehaviour {
             }
             winUI.SetActive(true);
             loseUI.SetActive(false);
+            winUI.GetComponent<RectTransform>().Find("NextLevelButton").GetComponent<Button>().Select();
         }
         else
         {
             winUI.SetActive(false);
             loseUI.SetActive(true);
+            loseUI.GetComponent<RectTransform>().Find("RetryButton").GetComponent<Button>().Select();
         }
     }
 
