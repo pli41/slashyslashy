@@ -75,10 +75,15 @@ public class GameManager : MonoBehaviour {
 
     public void CheckPlayerExist()
     {
+        Debug.Log("Checking player existence");
         if (!GameObject.FindGameObjectWithTag("Player"))
         {
             Debug.Log("player not exist");
             Endgame(false);
+        }
+        else
+        {
+            Debug.Log(GameObject.FindGameObjectWithTag("Player").name);
         }
     }
 
